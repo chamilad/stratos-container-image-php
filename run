@@ -1,21 +1,139 @@
 #!/bin/bash
+# --------------------------------------------------------------
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+# --------------------------------------------------------------
+
 source /root/.bashrc
 /usr/local/bin/populate-user-data.sh
 
-#sed -i "s/MB-IP/${MB_IP}/g" /mnt/apache-stratos-cartridge-agent/conf/jndi.properties
-#sed -i "s/MB-PORT/${MB_PORT}/g" /mnt/apache-stratos-cartridge-agent/conf/jndi.properties
-
-sed -i "s/MB-IP/${MB_IP}/g" /mnt/apache-stratos-cartridge-agent/conf/mqtttopic.properties
-sed -i "s/MB-PORT/${MB_PORT}/g" /mnt/apache-stratos-cartridge-agent/conf/mqtttopic.properties
-
-sed -i "s/CEP-IP/${CEP_IP}/g" /mnt/apache-stratos-cartridge-agent/bin/stratos.sh
-sed -i "s/CEP-PORT/${CEP_PORT}/g" /mnt/apache-stratos-cartridge-agent/bin/stratos.sh
-
-sed -i 's/CERT-TRUSTSTORE/${script_path}\/..\/security\/client-truststore.jks/g' /mnt/apache-stratos-cartridge-agent/bin/stratos.sh
-sed -i "s/TRUSTSTORE-PASSWORD/wso2carbon/g" /mnt/apache-stratos-cartridge-agent/bin/stratos.sh
+#mandatory parameters
+sed -i "s/MB-IP/${MB_IP}/g" /mnt/cartridge-agent/agent.conf
+sed -i "s/MB-PORT/${MB_PORT}/g" /mnt/cartridge-agent/agent.conf
 
 
-export JAVA_HOME=/opt/java
-export PATH=$PATH:$JAVA_HOME/bin
-cd /mnt/apache-stratos-cartridge-agent/bin/;./stratos.sh & > /tmp/agent.log
+#parameters that can be empty
+#default values have to be set
+
+if [ -z "${LISTEN_ADDR}" ]; then
+	sed -i "s/LISTEN_ADDR/localhost/g" /mnt/cartridge-agent/agent.conf
+else
+	sed -i "s/LISTEN_ADDR/${LISTEN_ADDR}/g" /mnt/cartridge-agent/agent.conf
+
+# defaults to the message broker IP if not set
+if [ -z "${CEP_IP}" ]; then
+	sed -i "s/CEP-IP/${MB_IP}/g" /mnt/cartridge-agent/agent.conf
+else
+	sed -i "s/CEP-IP/${CEP_IP}/g" /mnt/cartridge-agent/agent.conf
+
+if [ -z "${CEP_PORT}" ]; then
+	sed -i "s/CEP-PORT/7611/g" /mnt/cartridge-agent/agent.conf
+else
+	sed -i "s/CEP-PORT/${CEP_PORT}/g" /mnt/cartridge-agent/agent.conf
+
+if [ -z "${ENABLE_HEALTH_PUBLISHER}" ]; then
+	sed -i "s/ENABLE_HEALTH_PUBLISHER/true/g" /mnt/cartridge-agent/agent.conf
+else
+	sed -i "s/ENABLE_HEALTH_PUBLISHER/${ENABLE_HEALTH_PUBLISHER}/g" /mnt/cartridge-agent/agent.conf
+
+if [ -z "${LB_PRIVATE_IP}" ]; then
+	sed -i "s/LB_PRIVATE_IP/ /g" /mnt/cartridge-agent/agent.conf
+else
+	sed -i "s/LB_PRIVATE_IP/${LB_PRIVATE_IP}/g" /mnt/cartridge-agent/agent.conf
+
+if [ -z "${LB_PUBLIC_IP}" ]; then
+	sed -i "s/LB_PUBLIC_IP/ /g" /mnt/cartridge-agent/agent.conf
+else
+	sed -i "s/LB_PUBLIC_IP/${LB_PUBLIC_IP}/g" /mnt/cartridge-agent/agent.conf
+
+if [ -z "${ENABLE_ARTFCT_UPDATE}" ]; then
+	sed -i "s/ENABLE_ARTFCT_UPDATE/true/g" /mnt/cartridge-agent/agent.conf
+else
+	sed -i "s/ENABLE_ARTFCT_UPDATE/${ENABLE_ARTFCT_UPDATE}/g" /mnt/cartridge-agent/agent.conf
+
+if [ -z "${COMMIT_ENABLED}" ]; then
+	sed -i "s/COMMIT_ENABLED/false/g" /mnt/cartridge-agent/agent.conf
+else
+	sed -i "s/COMMIT_ENABLED/${COMMIT_ENABLED}/g" /mnt/cartridge-agent/agent.conf
+
+if [ -z "${CHECKOUT_ENABLED}" ]; then
+	sed -i "s/CHECKOUT_ENABLED/true/g" /mnt/cartridge-agent/agent.conf
+else
+	sed -i "s/CHECKOUT_ENABLED/${CHECKOUT_ENABLED}/g" /mnt/cartridge-agent/agent.conf
+
+if [ -z "${ARTFCT_UPDATE_INT}" ]; then
+	sed -i "s/ARTFCT_UPDATE_INT/15/g" /mnt/cartridge-agent/agent.conf
+else
+	sed -i "s/ARTFCT_UPDATE_INT/${ARTFCT_UPDATE_INT}/g" /mnt/cartridge-agent/agent.conf
+
+if [ -z "${PORT_CHECK_TIMEOUT}" ]; then
+	sed -i "s/PORT_CHECK_TIMEOUT/600/g" /mnt/cartridge-agent/agent.conf
+else
+	sed -i "s/PORT_CHECK_TIMEOUT/${PORT_CHECK_TIMEOUT}/g" /mnt/cartridge-agent/agent.conf
+
+if [ -z "${ENABLE_DATA_PUBLISHER}" ]; then
+	sed -i "s/ENABLE-DATA-PUBLISHER/false/g" /mnt/cartridge-agent/agent.conf
+else
+	sed -i "s/ENABLE-DATA-PUBLISHER/${ENABLE_DATA_PUBLISHER}/g" /mnt/cartridge-agent/agent.conf
+
+# defaults to the message broker IP if not set
+if [ -z "${MONITORING_SERVER_IP}" ]; then
+	sed -i "s/MONITORING-SERVER-IP/${MB_IP}/g" /mnt/cartridge-agent/agent.conf
+else
+	sed -i "s/MONITORING-SERVER-IP/${MONITORING_SERVER_IP}/g" /mnt/cartridge-agent/agent.conf
+
+if [ -z "${MONITORING_SERVER_PORT}" ]; then
+	sed -i "s/MONITORING-SERVER-PORT/7611/g" /mnt/cartridge-agent/agent.conf
+else
+	sed -i "s/MONITORING-SERVER-PORT/${MONITORING_SERVER_PORT}/g" /mnt/cartridge-agent/agent.conf
+
+if [ -z "${MONITORING_SERVER_SECURE_PORT}" ]; then
+	sed -i "s/MONITORING-SERVER-SECURE-PORT/7711/g" /mnt/cartridge-agent/agent.conf
+else
+	sed -i "s/MONITORING-SERVER-SECURE-PORT/${MONITORING_SERVER_SECURE_PORT}/g" /mnt/cartridge-agent/agent.conf
+
+if [ -z "${MONITORING_SERVER_ADMIN_USERNAME}" ]; then
+	sed -i "s/MONITORING-SERVER-ADMIN-USERNAME/admin/g" /mnt/cartridge-agent/agent.conf
+else
+	sed -i "s/MONITORING-SERVER-ADMIN-USERNAME/${MONITORING_SERVER_ADMIN_USERNAME}/g" /mnt/cartridge-agent/agent.conf
+
+if [ -z "${MONITORING_SERVER_ADMIN_PASSWORD}" ]; then
+	sed -i "s/MONITORING-SERVER-ADMIN-PASSWORD/admin/g" /mnt/cartridge-agent/agent.conf
+else
+	sed -i "s/MONITORING-SERVER-ADMIN-PASSWORD/${MONITORING_SERVER_ADMIN_PASSWORD}/g" /mnt/cartridge-agent/agent.conf
+
+if [ -z "${LOG_FILE_PATHS}" ]; then
+	sed -i "s/LOG_FILE_PATHS/ /g" /mnt/cartridge-agent/agent.conf
+else
+	sed -i "s/LOG_FILE_PATHS/${LOG_FILE_PATHS}/g" /mnt/cartridge-agent/agent.conf
+
+if [ -z "${APP_PATH}" ]; then
+	sed -i "s/APP_PATH/ /g" /mnt/cartridge-agent/agent.conf
+else
+	sed -i "s/APP_PATH/${APP_PATH}/g" /mnt/cartridge-agent/agent.conf
+
+if [ -z "${LOG_LEVEL}" ]; then
+	sed -i "s/LOG_LEVEL/DEBUG/g" /mnt/cartridge-agent/logging.ini
+else
+	sed -i "s/LOG_LEVEL/${LOG_LEVEL}/g" /mnt/cartridge-agent/logging.ini
+
+
+cd /mnt/cartridge-agent
+python agent.py & > /tmp/agent.screen.log
 /usr/sbin/apache2ctl -D FOREGROUND
