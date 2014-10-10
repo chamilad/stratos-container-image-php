@@ -19,4 +19,10 @@
 # under the License.
 #
 # --------------------------------------------------------------
-echo "SERVICE_NAME=${SERVICE_NAME},HOST_NAME=${HOST_NAME},MULTITENANT=false,TENANT_ID=${TENANT_ID},TENANT_RANGE=*,CARTRIDGE_ALIAS=${CARTRIDGE_ALIAS},CLUSTER_ID=${CLUSTER_ID},CARTRIDGE_KEY=${CARTRIDGE_KEY},DEPLOYMENT=${DEPLOYMENT},REPO_URL=${REPO_URL},PORTS=${PORTS},PUPPET_IP=${PUPPET_IP},PUPPET_HOSTNAME=${PUPPET_HOSTNAME},PUPPET_ENV=${PUPPET_ENV},MEMBER_ID=${MEMBER_ID},LB_CLUSTER_ID=${LB_CLUSTER_ID},NETWORK_PARTITION_ID=null,PARTITION_ID=null,APP_PATH=${APP_PATH},MIN_COUNT=${MIN_COUNT}" >> /mnt/cartridge-agent/payload/launch-params
+# This extension script will be executed once the update artifacts
+# event is received and they are copied to the given path.
+# --------------------------------------------------------------
+#
+
+log=/var/log/apache-stratos/cartridge-agent-extensions.log
+echo `date`": Artifacts Updated Event" | tee -a $log
