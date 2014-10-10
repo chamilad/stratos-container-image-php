@@ -48,7 +48,7 @@ ADD files/000-default.conf /etc/apache2/sites-enabled/000-default.conf
 # Install Dependent Python Libs
 ##################################
 
-RUN apt-get install -y python-pip python-dev gcc
+RUN apt-get install -y python python-pip python-dev gcc
 RUN pip install paho-mqtt
 RUN pip install GitPython==0.3.1-beta2
 RUN pip install psutil
