@@ -24,7 +24,7 @@ docker build -t chamilad/php-4.1.0-m2-py .
 Execute the following command to start the container in detached mode. Set the values for the environment variables You might need sudo to properly run this.
 
 ```bash
-docker run -d -P --name php-cartridge-08 --env SERVICE_NAME=php --env HOST_NAME=test2.php.stratos.com --env MULTITENANT=false --env TENANT_ID=1 --env TENANT_RANGE=* --env CARTRIDGE_ALIAS=php-my --env CLUSTER_ID=php.my.chamilad.com --env CARTRIDGE_KEY=BNdP01v8VEQPPYGY --env DEPLOYMENT=default --env REPO_URL=https://github.com/chamilad/NeWoice.git --env PORTS=80 --env PUPPET_IP=192.168.16.29 --env PUPPET_HOSTNAME=puppet.chamilad.com --env PUPPET_ENV=env --env MEMBER_ID=member1.cluster1.php.stratos.org --env LB_CLUSTER_ID=null --env NETWORK_PARTITION_ID=null --env PARTITION_ID=null --env APP_PATH=/var/www/www/ --env MIN_COUNT=1 --env MB_IP=10.100.5.140 --env MB_PORT=1883 chamilad/php-4.1.0-m2-py
+docker run -d -P --name php-cartridge-08 --env SERVICE_NAME=php --env HOST_NAME=test2.php.stratos.com --env MULTITENANT=false --env TENANT_ID=1 --env TENANT_RANGE=* --env CARTRIDGE_ALIAS=php-my --env CLUSTER_ID=php.my.chamilad.com --env CARTRIDGE_KEY=BNdP01v8VEQPPYGY --env DEPLOYMENT=default --env REPO_URL=https://github.com/chamilad/NeWoice.git --env PORTS=80 --env PUPPET_IP=192.168.16.29 --env PUPPET_HOSTNAME=puppet.chamilad.com --env PUPPET_ENV=env --env MEMBER_ID=member1.cluster1.php.stratos.org --env LB_CLUSTER_ID=null --env NETWORK_PARTITION_ID=null --env PARTITION_ID=null --env APP_PATH=/var/www/www/ --env MIN_COUNT=1 --env MB_IP=10.100.5.140 --env MB_PORT=1883 --env LOG_LEVEL=DEBUG chamilad/php-4.1.0-m2-py
 ```
 
 ## Expected environment variables
