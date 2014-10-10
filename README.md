@@ -3,12 +3,12 @@
 This image setup contains an Ubuntu 14.04 based PHP cartridge with Python implementation of the Cartridge Agent installed.  
 
 ##Setup
-Clone [this](https://github.com/chamilad/stratos.git) repository and checkout `master` branch. Navigate inside `tools/python-cartridge-agent/`.
-
+###cartridge-agent.zip
 Create a folder named `packs` alongside the Dockerfile.
 
-Compress the `cartridge-agent` folder and place the zip file inside `packs` folder as `cartridge-agent.zip`. 
+Clone [this](https://github.com/chamilad/stratos.git) repository and checkout `master` branch. Navigate inside `tools/python-cartridge-agent/`. Compress the `cartridge-agent` folder and place the zip file inside `packs` folder as `cartridge-agent.zip`. 
 
+###Agent extensions
 Inside the packs folder create a folder named `extensions`. 
 
 Copy the extension shell script files that should be executed upon various events in to the `packs/extensions` folder.
