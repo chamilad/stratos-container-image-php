@@ -83,7 +83,7 @@ else
 	sed -i "s/ARTFCT_UPDATE_INT/${ARTFCT_UPDATE_INT}/g" /mnt/cartridge-agent/agent.conf
 
 if [ -z "${PORT_CHECK_TIMEOUT}" ]; then
-	sed -i "s/PORT_CHECK_TIMEOUT/600/g" /mnt/cartridge-agent/agent.conf
+	sed -i "s/PORT_CHECK_TIMEOUT/600000/g" /mnt/cartridge-agent/agent.conf
 else
 	sed -i "s/PORT_CHECK_TIMEOUT/${PORT_CHECK_TIMEOUT}/g" /mnt/cartridge-agent/agent.conf
 
@@ -129,7 +129,7 @@ else
 	sed -i "s/APP_PATH/${APP_PATH}/g" /mnt/cartridge-agent/agent.conf
 
 if [ -z "${LOG_LEVEL}" ]; then
-	sed -i "s/LOG_LEVEL/DEBUG/g" /mnt/cartridge-agent/logging.ini
+	sed -i "s/LOG_LEVEL/INFO/g" /mnt/cartridge-agent/logging.ini
 else
 	sed -i "s/LOG_LEVEL/${LOG_LEVEL}/g" /mnt/cartridge-agent/logging.ini
 
