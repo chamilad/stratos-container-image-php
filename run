@@ -52,6 +52,18 @@ else
 	sed -i "s/CEP-PORT/${CEP_PORT}/g" /mnt/cartridge-agent/agent.conf
 fi
 
+if [ -z "${CEP_USERNAME}" ]; then
+	sed -i "s/CEP-ADMIN-USERNAME/admin/g" /mnt/cartridge-agent/agent.conf
+else
+	sed -i "s/CEP-ADMIN-USERNAME/${CEP_USERNAME}/g" /mnt/cartridge-agent/agent.conf
+fi
+
+if [ -z "${CEP_PASSWORD}" ]; then
+	sed -i "s/CEP-ADMIN-PASSWORD/admin/g" /mnt/cartridge-agent/agent.conf
+else
+	sed -i "s/CEP-ADMIN-PASSWORD/${CEP_PASSWORD}/g" /mnt/cartridge-agent/agent.conf
+fi
+
 
 if [ -z "${ENABLE_HEALTH_PUBLISHER}" ]; then
 	sed -i "s/ENABLE_HEALTH_PUBLISHER/true/g" /mnt/cartridge-agent/agent.conf
