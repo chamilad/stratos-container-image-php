@@ -68,6 +68,9 @@ RUN mkdir -p /mnt/cartridge-agent/extensions
 ADD packs/extensions /mnt/cartridge-agent/extensions
 RUN chmod +x /mnt/cartridge-agent/extensions/* 
 
+RUN mkdir -p /var/log/apache-stratos/
+RUN touch /var/log/apache-stratos/cartridge-agent-extensions.log
+
 EXPOSE 22 80
 
 ###################
