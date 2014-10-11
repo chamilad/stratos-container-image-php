@@ -39,6 +39,8 @@ docker run -d -P --name php-cartridge-08 --env SERVICE_NAME=php --env HOST_NAME=
 * LISTEN_ADDR - Ip address of the instance, defaults to `localhost`
 * CEP_IP - CEP Ip address, defaults to `MB_IP`
 * CEP_PORT - CEP port, defaults to `7611`
+* CEP_USERNAME - CEP username, defaults to `admin`
+* CEP_PASSWORD - CEP password, defaults to `admin`
 * ENABLE_HEALTH_PUBLISHER - Flag to enable/disable publishing health statistics to a complex event processing server, defaults to `true`
 * LB_PRIVATE_IP - Load balancer's private Ip, defaults to empty
 * LB_PUBLIC_IP - Load balancer's public Ip, defaults to empty
