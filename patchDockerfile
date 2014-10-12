@@ -19,7 +19,7 @@
 #
 # --------------------------------------------------------------
 
-FROM docker pull chamilad/php-4.1.0-m2-py:latest
+FROM apachestratos/php:4.1.0-m2
 MAINTAINER chamilad@wso2.com
 
 ##################
