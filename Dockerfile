@@ -48,11 +48,12 @@ ADD files/000-default.conf /etc/apache2/sites-enabled/000-default.conf
 # Install Dependent Python Libs
 ##################################
 
-RUN apt-get install -y python python-pip python-dev gcc
+RUN apt-get install -y git python python-pip python-dev gcc
 RUN pip install paho-mqtt
 RUN pip install GitPython==0.3.1-beta2
 RUN pip install psutil
 RUN pip install gittle
+RUN pip install pexpect
 
 ##################
 # Configure Agent
@@ -60,13 +61,13 @@ RUN pip install gittle
 WORKDIR /mnt/
 
 RUN mkdir -p /mnt/packs
-ADD packs/cartridge-agent.zip /mnt/packs/cartridge-agent.zip
-RUN unzip -q packs/cartridge-agent.zip
+ADD packs/cartridgeagent.zip /mnt/packs/cartridgeagent.zip
+RUN unzip -q packs/cartridgeagent.zip
 RUN rm -rf packs
-RUN mkdir -p /mnt/cartridge-agent/payload
-RUN mkdir -p /mnt/cartridge-agent/extensions
-ADD packs/extensions /mnt/cartridge-agent/extensions
-RUN chmod +x /mnt/cartridge-agent/extensions/* 
+RUN mkdir -p /mnt/cartridgeagent/payload
+RUN mkdir -p /mnt/cartridgeagent/extensions
+ADD packs/extensions /mnt/cartridgeagent/extensions
+RUN chmod +x /mnt/cartridgeagent/extensions/*
 
 RUN mkdir -p /var/log/apache-stratos/
 RUN touch /var/log/apache-stratos/cartridge-agent-extensions.log
@@ -79,6 +80,6 @@ EXPOSE 22 80
 ADD run /usr/local/bin/run
 RUN chmod +x /usr/local/bin/run
 ADD files/populate-user-data.sh /usr/local/bin/populate-user-data.sh
-RUN chmod +x /usr/local/bin/populate-user-data.sh 
+RUN chmod +x /usr/local/bin/populate-user-data.sh
 
 ENTRYPOINT /usr/local/bin/run | /usr/sbin/sshd -D
