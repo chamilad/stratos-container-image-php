@@ -185,6 +185,13 @@ else
 fi
 
 
+SYS_LOG="/var/log/apache2/error.log"
+SAML_ALIAS="/var/www/"
+
+sed -i "s/SYS-LOG/${SYS_LOG}/g" /etc/apache2/apache2.conf
+sed -i "s/APP-PATH/${APP_PATH}/g" /etc/apache2/sites-available/default
+sed -i "s/SAML-ALIAS/${SAML_ALIAS}/g" /etc/apache2/sites-available/default
+
 cd /mnt/cartridgeagent
 python agent.py > /tmp/agent.screen.log 2>&1 &
 /usr/sbin/apache2ctl -D FOREGROUND
