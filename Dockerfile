@@ -40,7 +40,7 @@ RUN sed -i "s/PermitRootLogin without-password/#PermitRootLogin without-password
 ##################
 # Install PHP
 ##################
-RUN apt-get install -y apache2 php5 zip unzip
+RUN apt-get install -y apache2 php5 zip unzip stress
 RUN rm /etc/apache2/sites-enabled/000-default.conf
 ADD files/000-default.conf /etc/apache2/sites-enabled/000-default.conf
 
