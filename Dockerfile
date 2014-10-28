@@ -42,10 +42,10 @@ RUN sed -i "s/PermitRootLogin without-password/#PermitRootLogin without-password
 ##################
 RUN apt-get install -y apache2 php5 zip unzip stress
 RUN rm /etc/apache2/sites-enabled/000-default.conf
-#ADD files/000-default.conf /etc/apache2/sites-enabled/000-default.conf
-ADD files/apache2/apache2.conf /etc/apache2/apache2.conf
+ADD files/000-default.conf /etc/apache2/sites-enabled/000-default.conf
+#ADD files/apache2/apache2.conf /etc/apache2/apache2.conf
 #ADD files/apache2/sites-available/default-ssl /etc/apache2/sites-available/default-ssl
-ADD files/apache2/sites-available/default /etc/apache2/sites-available/default
+#ADD files/apache2/sites-available/default /etc/apache2/sites-available/default
 
 ##################################
 # Install Dependent Python Libs
