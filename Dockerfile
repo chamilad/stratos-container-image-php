@@ -64,13 +64,18 @@ RUN pip install pexpect
 WORKDIR /mnt/
 
 RUN mkdir -p /mnt/packs
-ADD packs/cartridgeagent.zip /mnt/packs/cartridgeagent.zip
-RUN unzip -q packs/cartridgeagent.zip
+RUN mkdir -p /mnt/apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT
+ADD packs/apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT.zip /mnt/packs/apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT.zip
+
+WORKDIR /mnt/apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT
+RUN unzip -q ../packs/apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT.zip
+
+WORKDIR /mnt/
 RUN rm -rf packs
-RUN mkdir -p /mnt/cartridgeagent/payload
-RUN mkdir -p /mnt/cartridgeagent/extensions
-ADD packs/extensions /mnt/cartridgeagent/extensions
-RUN chmod +x /mnt/cartridgeagent/extensions/*
+RUN mkdir -p /mnt/apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT/payload
+RUN mkdir -p /mnt/apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT/extensions
+ADD packs/extensions /mnt/apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT/extensions
+RUN chmod +x /mnt/apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT/extensions/*
 
 RUN mkdir -p /var/log/apache-stratos/
 RUN touch /var/log/apache-stratos/cartridge-agent-extensions.log
