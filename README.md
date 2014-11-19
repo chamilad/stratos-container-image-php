@@ -17,7 +17,8 @@ Copy the extension shell script files that should be executed upon various event
 Execute the following command to create the Docker image from the Dockerfile. You might need sudo to properly run this.
 
 ```bash
-docker build -t chamilad/php-4.1.0-m2-py .
+docker build -t chamilad/php .
+docker tag {image hash} chamilad/php:4.1.0-m3
 ```
 
 ##Run Container
