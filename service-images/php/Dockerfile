@@ -19,36 +19,25 @@
 #
 # --------------------------------------------------------------
 
-FROM apachestratos/php:4.1.0-m2
+FROM chamilad/stratos-base:0.1
 MAINTAINER chamilad@wso2.com
 
 ##################
-# Configure Agent
+# Install PHP
 ##################
-WORKDIR /mnt/
+RUN apt-get install -y apache2 php5 zip unzip stress
+RUN rm /etc/apache2/sites-enabled/000-default.conf
+ADD files/000-default.conf /etc/apache2/sites-enabled/000-default.conf
 
-RUN rm -rf /mnt/cartridge-agent
-RUN rm -rf /mnt/packs
-RUN mkdir -p /mnt/packs
-ADD packs/cartridge-agent.zip /mnt/packs/cartridge-agent.zip
-RUN unzip -q packs/cartridge-agent.zip
-RUN rm -rf packs
-RUN mkdir -p /mnt/cartridge-agent/payload
-RUN mkdir -p /mnt/cartridge-agent/extensions
-ADD packs/extensions /mnt/cartridge-agent/extensions
-RUN chmod +x /mnt/cartridge-agent/extensions/*
+EXPOSE 80
 
-RUN mkdir -p /var/log/apache-stratos/
-RUN touch /var/log/apache-stratos/cartridge-agent-extensions.log
+#####################
+# Add extensions
+#####################
+ADD packs/extensions /mnt/apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT/extensions
+RUN chmod +x /mnt/apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT/extensions/*
 
-EXPOSE 22 80
-
-###################
-# Setup run script
-###################
-ADD run /usr/local/bin/run
-RUN chmod +x /usr/local/bin/run
-ADD files/populate-user-data.sh /usr/local/bin/populate-user-data.sh
-RUN chmod +x /usr/local/bin/populate-user-data.sh
-
+#####################
+# Entrypoint
+#####################
 ENTRYPOINT /usr/local/bin/run | /usr/sbin/sshd -D

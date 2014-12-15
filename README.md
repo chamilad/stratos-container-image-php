@@ -1,31 +1,85 @@
-# PHP Cartridge Docker image build setup for Apache Stratos
+# Docker image build setup for Apache Stratos
 
-This image setup contains an Ubuntu 14.04 based PHP cartridge with Python implementation of the Cartridge Agent installed.  
+This is a sample setup for the modularized Dockerfile system designed for Apache Stratos Kubernetes + Docker functionality. A base image sets up the cartridge agent and the basic tools (+sshd *for now*) required for a service cartridge. This base image is to be used by service Dockerfiles as the base build.
 
 ##Setup
-###cartridge-agent.zip
+### Base image
+####apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT.zip
 Create a folder named `packs` alongside the Dockerfile.
 
-Clone [this](https://github.com/chamilad/stratos.git) repository and checkout `master` branch. Navigate inside `tools/python-cartridge-agent/`. Compress the `cartridge-agent` folder and place the zip file inside `packs` folder as `cartridge-agent.zip`. 
-
-###Agent extensions
-Inside the packs folder create a folder named `extensions`. 
-
-Copy the extension shell script files that should be executed upon various events in to the `packs/extensions` folder.
-
-##Create the image.
-Execute the following command to create the Docker image from the Dockerfile. You might need sudo to properly run this.
+Clone [this](https://github.com/chamilad/stratos.git) repository and checkout `master` branch. Build Stratos and copy the cartridge agent artifact in to the `packs` folder.
 
 ```bash
-docker build -t chamilad/php .
-docker tag {image hash} chamilad/php:4.1.0-m3
+git clone https://github.com/apache/stratos.git
+cd stratos
+mvn clean install
+cp products/python-cartridge-agent/target/apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT.zip <BASE-IMAGE>/packs/
 ```
 
-##Run Container
-Execute the following command to start the container in detached mode. Set the values for the environment variables You might need sudo to properly run this.
+####Agent extensions
+Inside the packs folder create a folder named `extensions`.
+
+Copy the extension shell script files that should be executed upon various events in to the `packs/extensions` folder. Note that these can be replaced by custom extension scripts by various service images.
+
+### Service Image - Ex: PHP
+A service image should use the base image as the basis to add upon.
+
+```Dockerfile
+FROM chamilad/stratos-base:0.1
+```
+
+Then the service installation and configuration come. Additionally, customized extensions can be included in the service image, which can replace the agent extensions.
+
+```Dockerfile
+##################
+# Install PHP
+##################
+RUN apt-get install -y apache2 php5 zip unzip stress
+RUN rm /etc/apache2/sites-enabled/000-default.conf
+ADD files/000-default.conf /etc/apache2/sites-enabled/000-default.conf
+
+EXPOSE 80
+
+#####################
+# Add extensions
+#####################
+ADD packs/extensions /mnt/apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT/extensions
+RUN chmod +x /mnt/apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT/extensions/*
+```
+
+The service image should use the run script included in the base image as the `ENTRYPOINT`. This is because it is the script which is responsible for configuring and actually starting the cartridge agent at startup. The complete sample Dockerfile for PHP is as follows.
+
+```Dockerfile
+FROM chamilad/stratos-base:0.1
+MAINTAINER chamilad@wso2.com
+
+##################
+# Install PHP
+##################
+RUN apt-get install -y apache2 php5 zip unzip stress
+RUN rm /etc/apache2/sites-enabled/000-default.conf
+ADD files/000-default.conf /etc/apache2/sites-enabled/000-default.conf
+
+EXPOSE 80
+
+#####################
+# Add extensions
+#####################
+ADD packs/extensions /mnt/apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT/extensions
+RUN chmod +x /mnt/apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT/extensions/*
+
+#####################
+# Entrypoint
+#####################
+ENTRYPOINT /usr/local/bin/run | /usr/sbin/sshd -D
+```
+
+##Create the images.
+The Docker images should be built in the order of base, service. To build an image execute the following command inside the corresponding folder. __Notice the dot at the end of the build command.__ You might need sudo to properly run this.
 
 ```bash
-docker run -d -P --name php-cartridge-08 --env SERVICE_NAME=php --env HOST_NAME=test2.php.stratos.com --env MULTITENANT=false --env TENANT_ID=1 --env TENANT_RANGE=* --env CARTRIDGE_ALIAS=php-my --env CLUSTER_ID=php.my.chamilad.com --env CARTRIDGE_KEY=BNdP01v8VEQPPYGY --env DEPLOYMENT=default --env REPO_URL=https://github.com/chamilad/NeWoice.git --env PORTS=80 --env PUPPET_IP=192.168.16.29 --env PUPPET_HOSTNAME=puppet.chamilad.com --env PUPPET_ENV=env --env MEMBER_ID=member1.cluster1.php.stratos.org --env LB_CLUSTER_ID=null --env NETWORK_PARTITION_ID=null --env PARTITION_ID=null --env APP_PATH=/var/www/www/ --env MIN_COUNT=1 --env MB_IP=10.100.5.140 --env MB_PORT=1883 --env LOG_LEVEL=DEBUG chamilad/php-4.1.0-m2-py
+docker build -t chamilad/stratos-base .
+docker tag {image hash} chamilad/stratos-base:0.1
 ```
 
 ## Expected environment variables

@@ -22,36 +22,23 @@
 FROM ubuntu:14.04
 MAINTAINER chamilad@wso2.com
 
-RUN apt-get update
-RUN apt-get install -y wget
-
 WORKDIR /opt/
 
 #################################
 # Enable ssh - This is not good. http://jpetazzo.github.io/2014/06/23/docker-ssh-considered-evil/
 # For experimental purposes only
 ##################################
-
-RUN apt-get install -y openssh-server
+RUN apt-get update && apt-get install -y openssh-server
 RUN mkdir -p /var/run/sshd
 RUN echo 'root:g' | chpasswd
 RUN sed -i "s/PermitRootLogin without-password/#PermitRootLogin without-password/" /etc/ssh/sshd_config
 
-##################
-# Install PHP
-##################
-RUN apt-get install -y apache2 php5 zip unzip stress
-RUN rm /etc/apache2/sites-enabled/000-default.conf
-ADD files/000-default.conf /etc/apache2/sites-enabled/000-default.conf
-#ADD files/apache2/apache2.conf /etc/apache2/apache2.conf
-#ADD files/apache2/sites-available/default-ssl /etc/apache2/sites-available/default-ssl
-#ADD files/apache2/sites-available/default /etc/apache2/sites-available/default
+EXPOSE 22
 
 ##################################
 # Install Dependent Python Libs
 ##################################
-
-RUN apt-get install -y git python python-pip python-dev gcc
+RUN apt-get update && apt-get install -y git python python-pip python-dev gcc
 RUN pip install paho-mqtt
 RUN pip install GitPython==0.3.1-beta2
 RUN pip install psutil
@@ -64,13 +51,15 @@ RUN pip install pexpect
 WORKDIR /mnt/
 
 RUN mkdir -p /mnt/packs
-RUN mkdir -p /mnt/apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT
 ADD packs/apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT.zip /mnt/packs/apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT.zip
+RUN mkdir -p /mnt/apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT
 
 WORKDIR /mnt/apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT
+
 RUN unzip -q ../packs/apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT.zip
 
 WORKDIR /mnt/
+
 RUN rm -rf packs
 RUN mkdir -p /mnt/apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT/payload
 RUN mkdir -p /mnt/apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT/extensions
@@ -80,8 +69,6 @@ RUN chmod +x /mnt/apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT/extension
 RUN mkdir -p /var/log/apache-stratos/
 RUN touch /var/log/apache-stratos/cartridge-agent-extensions.log
 
-EXPOSE 22 80
-
 ###################
 # Setup run script
 ###################
@@ -89,5 +76,3 @@ ADD run /usr/local/bin/run
 RUN chmod +x /usr/local/bin/run
 ADD files/populate-user-data.sh /usr/local/bin/populate-user-data.sh
 RUN chmod +x /usr/local/bin/populate-user-data.sh
-
-ENTRYPOINT /usr/local/bin/run | /usr/sbin/sshd -D
